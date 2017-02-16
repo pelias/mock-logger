@@ -1,5 +1,7 @@
 # Pelias Mock Logger
 
+![Travis CI Status](https://travis-ci.org/pelias/mock-logger.svg)
+
 This module is used for testing logging events in Pelias projects.  [proxyquire](https://www.npmjs.com/package/proxyquire)
 is the supported module for overriding dependencies in which this module is used.  
 
@@ -10,6 +12,12 @@ $ npm install pelias-mock-logger --save-dev
 ```
 
 [![NPM](https://nodei.co/npm/pelias-mock-logger.png?downloads=true&stars=true)](https://nodei.co/npm/pelias-mock-logger)
+
+## NPM Module
+
+The `pelias-mock-logger` npm module can be found here:
+
+[https://npmjs.org/package/pelias-mock-logger](https://npmjs.org/package/pelias-mock-logger)
 
 ## Usage
 
@@ -89,12 +97,6 @@ t.deepEquals(logger.getErrorMessages(), ['RequireTransport: failed to connect to
     * `isVerboseMessages(pattern)`
     * `isDebugMessages(pattern)`
     * `isSillyMessages(pattern)`
-
-## NPM Module
-
-The `pelias-mock-logger` npm module can be found here:
-
-[https://npmjs.org/package/pelias-mock-logger](https://npmjs.org/package/pelias-mock-logger)
 
 ## Contributing
 
