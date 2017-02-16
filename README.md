@@ -1,5 +1,7 @@
 # Pelias Mock Logger
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/mocklogger.svg)](https://greenkeeper.io/)
+
 
 ## Functions
 
