@@ -15,7 +15,7 @@ $ npm install pelias-mock-logger --save-dev
 
 Traditionally, testing logging events required quite a bit of setup with proxyquire:
 
-```
+```javascript
 const errorMessages = [];
 
 var service = proxyquire('../../../service/interpolation', {
@@ -34,7 +34,7 @@ t.deepEquals(errorMessages, ['RequireTransport: failed to connect to interpolati
 
 Using the `pelias-mock-logger` module, this code can be shortened to:
 
-```
+```javascript
 const logger = require('pelias-mock-logger')();
 
 var adapter = proxyquire('../../../service/interpolation', {
