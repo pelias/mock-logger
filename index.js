@@ -63,6 +63,19 @@ module.exports = () => {
       }
 
       throw `unsupported log level: ${level}`;
+    },
+    isMessage: (level, pattern) => {
+      if (levels.hasOwnProperty(level)) {
+        if (_.isRegExp(pattern) || _.isString(pattern)) {
+          return levels[level].some((message) => {
+            return _.isRegExp(pattern) ? message.match(pattern) : message === pattern;
+          });
+        }
+
+        throw 'pattern must be a regexp or string';
+      }
+
+      throw `unsupported log level: ${level}`;
     }
   };
 
@@ -95,9 +108,13 @@ module.exports = () => {
     // add level-specific isMessage
     // match if pattern is a regex, otherwise use equality
     acc[`is${_.capitalize(level)}Message`] = (pattern) => {
-      return levels[level].some((message) => {
-        return _.isRegExp(pattern) ? message.match(pattern) : message === pattern;
-      });
+      if (_.isRegExp(pattern) || _.isString(pattern)) {
+        return levels[level].some((message) => {
+          return _.isRegExp(pattern) ? message.match(pattern) : message === pattern;
+        });
+      }
+
+      throw 'pattern must be a regexp or string';
 
     };
 
