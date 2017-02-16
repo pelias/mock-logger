@@ -1,14 +1,29 @@
 {
   "name": "pelias-mock-logger",
   "version": "1.0.0",
+  "author": "mapzen",
   "description": "Mock logger for testing logging behavior in Pelias projects",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "lint": "jshint .",
     "test": "node test/index | tap-dot"
   },
-  "author": "mapzen",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pelias/mock-logger.git"
+  },
+  "keywords": [
+    "pelias",
+    "logging"
+  ],
+  "bugs": {
+    "url": "https://github.com/pelias/mock-logger/issues"
+  },
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=1.4.3"
+  },
   "devDependencies": {
     "tap-dot": "^1.0.5",
     "tape": "^4.6.3"
