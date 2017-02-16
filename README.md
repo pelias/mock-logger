@@ -102,7 +102,7 @@ t.deepEquals(logger.getErrorMessages(), ['RequireTransport: failed to connect to
 
 Please fork and pull request against upstream master on a feature branch.
 
-Pretty please; provide unit tests and script fixtures in the `test` directory.
+Provide unit tests in the `test` directory.
 
 ### Running Unit Tests
 
