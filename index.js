@@ -3,28 +3,20 @@
 const _ = require('lodash');
 
 module.exports = () => {
-  const levels = {
-    error: [],
-    warn: [],
-    info: [],
-    verbose: [],
-    debug: [],
-    silly: []
-  };
+  // initialize arrays for all levels
+  const levels = ['error', 'warn', 'info', 'verbose', 'debug', 'silly'].reduce((acc, level) => {
+    acc[level] = [];
+    return acc;
+  }, {});
 
+  // establish the base functions
   const base = {
     get: (layer) => {
-      return {
-        error: (msg) => { levels.error.push(msg); },
-        warn: (msg) => { levels.warn.push(msg); },
-        info: (msg) => { levels.info.push(msg); },
-        verbose: (msg) => { levels.verbose.push(msg); },
-        debug: (msg) => { levels.debug.push(msg); },
-        silly: (msg) => { levels.silly.push(msg); },
-        getLayer: () => {
-          return layer;
-        }
-      };
+      // add error(msg), info(msg), etc to getLayer() to form logger functionality
+      return Object.keys(levels).reduce((acc, level) => {
+        acc[level] = (msg) => levels[level].push(msg);
+        return acc;
+      }, { getLayer: () => { return layer; } } );
     },
     // return the supported logging levels
     getLevels: () => {
@@ -50,20 +42,6 @@ module.exports = () => {
 
       throw `unsupported log level: ${level}`;
     },
-    // return whether there are logged messages at a particular level, optionally matching a pattern
-    hasMessages: (level, pattern) => {
-      if (levels.hasOwnProperty(level)) {
-        if (_.isRegExp(pattern)) {
-          return levels[level].filter((message) => {
-            return message.match(pattern);
-          }).length > 0;
-        }
-
-        return levels[level].length > 0;
-      }
-
-      throw `unsupported log level: ${level}`;
-    },
     isMessage: (level, pattern) => {
       if (levels.hasOwnProperty(level)) {
         if (_.isRegExp(pattern) || _.isString(pattern)) {
@@ -79,47 +57,17 @@ module.exports = () => {
     }
   };
 
-  // dynamically add functions that log/get/has/is at all levels
+  // return whether there are logged messages at a particular level, optionally matching a pattern
+  base.hasMessages = (level, pattern) => {
+    return base.getMessages(level, pattern).length > 0;
+  }
+
+  // dynamically add error(), getErrorMessages(), hasErrorMessages(), isErrorMessage(), etc.
   return Object.keys(levels).reduce((acc, level) => {
-    // add level-specific getMessages
-    // return matching messages if pattern is a regex, otherwise return all
-    acc[`get${_.capitalize(level)}Messages`] = (pattern) => {
-      if (_.isRegExp(pattern)) {
-        return levels[level].filter((message) => {
-          return message.match(pattern);
-        });
-      }
-
-      return levels[level].slice();
-
-    };
-
-    // add level-specific hasMessages with optional pattern
-    acc[`has${_.capitalize(level)}Messages`] = (pattern) => {
-      if (_.isRegExp(pattern)) {
-        return levels[level].some((message) => {
-          return message.match(pattern);
-        });
-      }
-
-      return levels[level].length > 0;
-    };
-
-    // add level-specific isMessage
-    // match if pattern is a regex, otherwise use equality
-    acc[`is${_.capitalize(level)}Message`] = (pattern) => {
-      if (_.isRegExp(pattern) || _.isString(pattern)) {
-        return levels[level].some((message) => {
-          return _.isRegExp(pattern) ? message.match(pattern) : message === pattern;
-        });
-      }
-
-      throw 'pattern must be a regexp or string';
-
-    };
-
+    acc[`get${_.capitalize(level)}Messages`] = acc.getMessages.bind(null, level);
+    acc[`has${_.capitalize(level)}Messages`] = acc.hasMessages.bind(null, level);
+    acc[`is${_.capitalize(level)}Message`] = acc.isMessage.bind(null, level);
     return acc;
-
   }, base);
 
 };
