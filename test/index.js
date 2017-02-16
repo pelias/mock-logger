@@ -30,63 +30,8 @@ test('all levels should initially be empty', (t) => {
 
 });
 
-test('level-specific hasMessages should return true if there is at least 1 message at that level', (t) => {
-  const rootLogger = require('../index')();
-  const logger = rootLogger.get('layer value');
-
-  rootLogger.getLevels().forEach((level) => {
-    t.notOk(rootLogger[`has${_.capitalize(level)}Messages`]());
-    t.notOk(rootLogger.hasMessages(level));
-
-    logger[level](`${level} message`);
-
-    t.ok(rootLogger[`has${_.capitalize(level)}Messages`]());
-    t.ok(rootLogger.hasMessages(level));
-
-  });
-
-  t.end();
-
-});
-
-test('unknown level parameter to getMessages, hasMessages, isMessage should throw error', (t) => {
-  const rootLogger = require('../index')();
-
-  t.throws(() => {
-    rootLogger.getMessages('unknown level');
-  }, /^unsupported log level: unknown level$/);
-  t.throws(() => {
-    rootLogger.hasMessages('unknown level');
-  }, /^unsupported log level: unknown level$/);
-  t.throws(() => {
-    rootLogger.isMessage('unknown level');
-  }, /^unsupported log level: unknown level$/);
-  t.end();
-
-});
-
-test('level-specific hasMessages with pattern should return true if there is at least 1 message at that level', (t) => {
-  const rootLogger = require('../index')();
-  const logger = rootLogger.get('layer value');
-
-  rootLogger.getLevels().forEach((level) => {
-    // add a message that won't match the pattern
-    logger[level](`${level} message 1`);
-
-    t.notOk(rootLogger[`has${_.capitalize(level)}Messages`](/.+2/));
-
-    // add a message that matches the pattern
-    logger[level](`${level} message 2`);
-
-    t.ok(rootLogger[`has${_.capitalize(level)}Messages`](/.+2/));
-
-  });
-
-  t.end();
-
-});
-
-test('getMessages should return clones of the internal arrays', (t) => {
+// TESTS FOR GET
+test('getMessages should return all messages logged at the specified level', (t) => {
   const rootLogger = require('../index')();
   const logger = rootLogger.get('layer value');
 
@@ -97,14 +42,20 @@ test('getMessages should return clones of the internal arrays', (t) => {
       logger[level](message);
     });
 
-    const actual = rootLogger.getMessages(level);
+    const actual1 = rootLogger.getMessages(level);
+    const actual2 = rootLogger[`get${_.capitalize(level)}Messages`]();
 
-    t.deepEquals(actual, expected, `all ${level} messages should have been returned`);
+    t.deepEquals(actual1, expected, `all ${level} messages should have been returned`);
+    t.deepEquals(actual2, expected, `all ${level} messages should have been returned`);
 
-    actual.push(`${level} message 3`);
-    actual[0] = `new ${level} message 1`;
+    // modify the returned arrays to show that internally nothing has changed
+    actual1.push(`${level} message 3`);
+    actual1[0] = `new ${level} message 1`;
+    actual2.push(`${level} message 3`);
+    actual2[0] = `new ${level} message 1`;
 
     t.deepEquals(rootLogger.getMessages(level), expected, `${level} messages should not be modified`);
+    t.deepEquals(rootLogger[`get${_.capitalize(level)}Messages`](), expected, `${level} messages should not be modified`);
 
   });
 
@@ -123,85 +74,19 @@ test('getMessages with pattern should return matching messages at supplied level
       logger[level](message);
     });
 
-    const actual = rootLogger.getMessages(level, / 2$/);
+    const actual1 = rootLogger.getMessages(level, / 2$/);
+    const actual2 = rootLogger[`get${_.capitalize(level)}Messages`](/ 2/);
 
-    t.deepEquals(actual, [expected[1]], `all ${level} messages should have been returned`);
+    t.deepEquals(actual1, [expected[1]], `all ${level} messages should have been returned`);
+    t.deepEquals(actual2, [`${level} message 2`], `all ${level} messages should have been returned`);
 
-    actual.push(`${level} message 3`);
-    actual[0] = `new ${level} message 1`;
+    actual1.push(`${level} message 3`);
+    actual1[0] = `new ${level} message 1`;
+    actual2.push(`${level} message 3`);
+    actual2[0] = `new ${level} message 1`;
 
     t.deepEquals(rootLogger.getMessages(level, / 2$/), [expected[1]], `${level} messages should not be modified`);
-
-  });
-
-  t.end();
-
-});
-
-test('hasMessages with pattern should return true or false if any messages match the pattern', (t) => {
-  const rootLogger = require('../index')();
-  const logger = rootLogger.get('layer value');
-
-  rootLogger.getLevels().forEach((level) => {
-    logger[level](`${level} message 1`);
-
-    t.notOk(rootLogger.hasMessages(level, / 2$/), `should not be any messages matching pattern at ${level} level`);
-
-    logger[level](`${level} message 2`);
-
-    t.ok(rootLogger.hasMessages(level, / 2$/), `should be messages matching pattern at ${level} level`);
-
-  });
-
-  t.end();
-
-});
-
-test('level-specific getMessages should return clones of the internal arrays', (t) => {
-  const rootLogger = require('../index')();
-  const logger = rootLogger.get('layer value');
-
-  rootLogger.getLevels().forEach((level) => {
-    const expected = [`${level} message 1`, `${level} message 2`];
-
-    expected.forEach((message) => {
-      logger[level](message);
-    });
-
-    const actual = rootLogger[`get${_.capitalize(level)}Messages`]();
-
-    t.deepEquals(actual, expected, `all ${level} messages should have been returned`);
-
-    actual.push(`${level} message 3`);
-    actual[0] = `new ${level} message 1`;
-
-    t.deepEquals(rootLogger[`get${_.capitalize(level)}Messages`](), expected, `${level} messages should not be modified`);
-
-  });
-
-  t.end();
-
-});
-
-test('level-specific getMessages with pattern should return messages matching pattern', (t) => {
-  const rootLogger = require('../index')();
-  const logger = rootLogger.get('layer value');
-
-  rootLogger.getLevels().forEach((level) => {
-    const expected = [`${level} message 1`, `${level} message 2`];
-
-    expected.forEach((message) => {
-      logger[level](message);
-    });
-
-    const actual = rootLogger[`get${_.capitalize(level)}Messages`](/.+2/);
-
-    t.deepEquals(actual, [`${level} message 2`], `all ${level} messages should have been returned`);
-
-    actual.push(`${level} message 3`);
-    actual[0] = `new ${level} message 1`;
-
-    t.deepEquals(rootLogger[`get${_.capitalize(level)}Messages`](/.+2/), [`${level} message 2`]);
+    t.deepEquals(rootLogger[`get${_.capitalize(level)}Messages`](/ 2/), [`${level} message 2`]);
 
   });
 
@@ -238,7 +123,75 @@ test('0-parameter getMessages should return clone of entire object', (t) => {
 
 });
 
-test('level-specific isMessage should return true if a message matching the pattern has been logged', (t) => {
+test('unknown level parameter to getMessages should throw error', (t) => {
+  const rootLogger = require('../index')();
+
+  t.throws(
+    rootLogger.getMessages.bind(null, 'unknown level'),
+    /^unsupported log level: unknown level$/
+  );
+  t.end();
+
+});
+
+
+// TESTS FOR HAS
+test('hasMessages should return true if there is at least 1 message at that level', (t) => {
+  const rootLogger = require('../index')();
+  const logger = rootLogger.get('layer value');
+
+  rootLogger.getLevels().forEach((level) => {
+    t.notOk(rootLogger[`has${_.capitalize(level)}Messages`]());
+    t.notOk(rootLogger.hasMessages(level));
+
+    logger[level](`${level} message`);
+
+    t.ok(rootLogger[`has${_.capitalize(level)}Messages`]());
+    t.ok(rootLogger.hasMessages(level));
+
+  });
+
+  t.end();
+
+});
+
+test('hasMessages with pattern should return true if there is at least 1 message at that level', (t) => {
+  const rootLogger = require('../index')();
+  const logger = rootLogger.get('layer value');
+
+  rootLogger.getLevels().forEach((level) => {
+    // add a message that won't match the pattern
+    logger[level](`${level} message 1`);
+
+    t.notOk(rootLogger.hasMessages(level, / 2$/), `should not be any messages matching pattern at ${level} level`);
+    t.notOk(rootLogger[`has${_.capitalize(level)}Messages`](/ 2/), `should not be any messages matching pattern at ${level} level`);
+
+    // add a message that matches the pattern
+    logger[level](`${level} message 2`);
+
+    t.ok(rootLogger.hasMessages(level, / 2$/), `should be messages matching pattern at ${level} level`);
+    t.ok(rootLogger[`has${_.capitalize(level)}Messages`](/ 2/), `should be messages matching pattern at ${level} level`);
+
+  });
+
+  t.end();
+
+});
+
+test('unknown level parameter to hasMessages should throw error', (t) => {
+  const rootLogger = require('../index')();
+
+  t.throws(
+    rootLogger.hasMessages.bind(null, 'unknown level'),
+    /^unsupported log level: unknown level$/
+  );
+  t.end();
+
+});
+
+
+// TESTS FOR IS
+test('isMessage should return true if a message matching the pattern has been logged', (t) => {
   const rootLogger = require('../index')();
   const logger = rootLogger.get('layer value');
 
@@ -248,7 +201,12 @@ test('level-specific isMessage should return true if a message matching the patt
 
     t.ok(rootLogger.isMessage(level, / 1$/));
     t.ok(rootLogger.isMessage(level, / 2$/));
+
+    t.ok(rootLogger[`is${_.capitalize(level)}Message`](/ 1$/));
+    t.ok(rootLogger[`is${_.capitalize(level)}Message`](/ 2$/));
+
     t.notOk(rootLogger.isMessage(level, / 3$/));
+    t.notOk(rootLogger[`is${_.capitalize(level)}Message`](/ 3$/));
 
   });
 
@@ -266,7 +224,12 @@ test('isMessage should return true if a message equal to the supplied string has
 
     t.ok(rootLogger.isMessage(level, `${level} message 1`));
     t.ok(rootLogger.isMessage(level, `${level} message 2`));
+
+    t.ok(rootLogger[`is${_.capitalize(level)}Message`](`${level} message 1`));
+    t.ok(rootLogger[`is${_.capitalize(level)}Message`](`${level} message 2`));
+
     t.notOk(rootLogger.isMessage(level, `${level} message 3`));
+    t.notOk(rootLogger[`is${_.capitalize(level)}Message`](`${level} message 3`));
 
   });
 
@@ -283,59 +246,23 @@ test('isMessage should throw an error if the supplied pattern is not a valid reg
       rootLogger.isMessage.bind(null, level, 17.3),
       /^pattern must be a regexp or string$/
     );
-  });
-
-  t.end();
-
-});
-
-test('isMessage should return true if a message matching the pattern has been logged', (t) => {
-  const rootLogger = require('../index')();
-  const logger = rootLogger.get('layer value');
-
-  rootLogger.getLevels().forEach((level) => {
-    logger[level](`${level} message 1`);
-    logger[level](`${level} message 2`);
-
-    t.ok(rootLogger[`is${_.capitalize(level)}Message`](/ 1$/));
-    t.ok(rootLogger[`is${_.capitalize(level)}Message`](/ 2$/));
-    t.notOk(rootLogger[`is${_.capitalize(level)}Message`](/ 3$/));
-
-  });
-
-  t.end();
-
-});
-
-test('isMessage should return true if a message equal to the supplied string has been logged', (t) => {
-  const rootLogger = require('../index')();
-  const logger = rootLogger.get('layer value');
-
-  rootLogger.getLevels().forEach((level) => {
-    logger[level](`${level} message 1`);
-    logger[level](`${level} message 2`);
-
-    t.ok(rootLogger[`is${_.capitalize(level)}Message`](`${level} message 1`));
-    t.ok(rootLogger[`is${_.capitalize(level)}Message`](`${level} message 2`));
-    t.notOk(rootLogger[`is${_.capitalize(level)}Message`](`${level} message 3`));
-
-  });
-
-  t.end();
-
-});
-
-test('isMessage should throw an error if the supplied pattern is not a valid regexp or string', (t) => {
-  const rootLogger = require('../index')();
-  const logger = rootLogger.get('layer value');
-
-  rootLogger.getLevels().forEach((level) => {
     t.throws(
       rootLogger[`is${_.capitalize(level)}Message`].bind(null, 17.3),
       /^pattern must be a regexp or string$/
     );
   });
 
+  t.end();
+
+});
+
+test('unknown level parameter to isMessage should throw error', (t) => {
+  const rootLogger = require('../index')();
+
+  t.throws(
+    rootLogger.isMessage.bind(null, 'unknown level'),
+    /^unsupported log level: unknown level$/
+  );
   t.end();
 
 });
