@@ -1,0 +1,19 @@
+{
+  "name": "pelias-mock-logger",
+  "version": "1.0.0",
+  "description": "Mock logger for testing logging behavior in Pelias projects",
+  "main": "index.js",
+  "scripts": {
+    "lint": "jshint .",
+    "test": "node test/index | tap-dot"
+  },
+  "author": "mapzen",
+  "license": "MIT",
+  "devDependencies": {
+    "tap-dot": "^1.0.5",
+    "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}
