@@ -50,9 +50,15 @@ module.exports = () => {
 
       throw `unsupported log level: ${level}`;
     },
-    // return whether there are logged messages at a particular level
-    hasMessages: (level) => {
+    // return whether there are logged messages at a particular level, optionally matching a pattern
+    hasMessages: (level, pattern) => {
       if (levels.hasOwnProperty(level)) {
+        if (_.isRegExp(pattern)) {
+          return levels[level].filter((message) => {
+            return message.match(pattern);
+          }).length > 0;
+        }
+
         return levels[level].length > 0;
       }
 

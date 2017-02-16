@@ -135,6 +135,25 @@ test('getMessages with pattern should return matching messages at supplied level
 
 });
 
+test('hasMessages with pattern should return true or false if any messages match the pattern', (t) => {
+  const rootLogger = require('../index')();
+  const logger = rootLogger.get('layer value');
+
+  rootLogger.getLevels().forEach((level) => {
+    logger[level](`${level} message 1`);
+
+    t.notOk(rootLogger.hasMessages(level, / 2$/), `should not be any messages matching pattern at ${level} level`);
+
+    logger[level](`${level} message 2`);
+
+    t.ok(rootLogger.hasMessages(level, / 2$/), `should be messages matching pattern at ${level} level`);
+
+  });
+
+  t.end();
+
+});
+
 test('level-specific getMessages should return clones of the internal arrays', (t) => {
   const rootLogger = require('../index')();
   const logger = rootLogger.get('layer value');
