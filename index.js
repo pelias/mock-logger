@@ -1,5 +1,3 @@
-'use strict';
-
 const _ = require('lodash');
 
 module.exports = () => {
@@ -62,7 +60,7 @@ module.exports = () => {
     return base.getMessages(level, pattern).length > 0;
   }
 
-  // dynamically add error(), getErrorMessages(), hasErrorMessages(), isErrorMessage(), etc.
+  // dynamically add getErrorMessages(), hasErrorMessages(), isErrorMessage(), etc.
   return Object.keys(levels).reduce((acc, level) => {
     acc[`get${_.capitalize(level)}Messages`] = acc.getMessages.bind(null, level);
     acc[`has${_.capitalize(level)}Messages`] = acc.hasMessages.bind(null, level);
