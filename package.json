@@ -36,7 +36,8 @@
     "semantic-release": "^6.3.2"
   },
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "npm-check": "^5.4.0"
   },
   "pre-commit": [
     "lint",
