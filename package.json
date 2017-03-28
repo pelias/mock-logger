@@ -8,9 +8,10 @@
   "scripts": {
     "lint": "jshint .",
     "test": "node test/index | tap-dot",
-    "travis": "npm test",
+    "travis": "npm run check-dependencies && npm test",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "check-dependencies": "node_modules/.bin/npm-check --production"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "jshint": "^2.8.0",
+    "npm-check": "^5.4.0",
     "precommit-hook": "^3.0.0",
     "tap-dot": "^1.0.5",
     "tape": "^4.6.3",
@@ -40,6 +42,7 @@
   "pre-commit": [
     "lint",
     "validate",
-    "test"
+    "test",
+    "check-dependencies"
   ]
 }
