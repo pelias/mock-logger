@@ -108,15 +108,13 @@ test('0-parameter getMessages should return clone of entire object', (t) => {
   };
 
   Object.keys(expected).forEach((level) => {
-    expected[level].forEach((msg) => { logger[level](msg); });
+    expected[level].forEach(msg => logger[level](msg));
   });
 
   const actual = rootLogger.getMessages();
 
   // log some more messages to show that getMessages returned a clone
-  Object.keys(expected).forEach((level) => {
-    logger[level](`${level} message 3`);
-  });
+  Object.keys(expected).forEach(level => logger[level](`${level} message 3`));
 
   t.deepEquals(actual, expected);
   t.end();
