@@ -35,14 +35,12 @@ test('varargs should be supported for logging events (util.format gets called un
   const logger = rootLogger.get('layer value');
 
   rootLogger.getLevels().forEach(level => {
-    logger[level](`${level} message %d %d`, 1, 2, { a: 3 }, [4, 5]);
-    logger[level](`${level} message %d %d`, 6, 7, { b: 8 }, [9, 10]);
+    logger[level](`${level} message %d %s`, 1, 'blah', { a: 3 }, [4, 5]);
 
     const actual = rootLogger.getMessages(level);
 
     const expected = [
-      `${level} message 1 2 { a: 3 } [ 4, 5 ]`,
-      `${level} message 6 7 { b: 8 } [ 9, 10 ]`
+      `${level} message 1 blah { a: 3 } [ 4, 5 ]`,
     ];
 
     t.deepEquals(actual, expected, `all ${level} messages should have been returned`);
