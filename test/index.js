@@ -30,6 +30,47 @@ test('all levels should initially be empty', (t) => {
 
 });
 
+test('varargs should be supported for logging events (util.format gets called under the hood)', t => {
+  const rootLogger = require('../index')();
+  const logger = rootLogger.get('layer value');
+
+  rootLogger.getLevels().forEach(level => {
+    logger[level](`${level} message %d %d`, 1, 2, { a: 3 }, [4, 5]);
+    logger[level](`${level} message %d %d`, 6, 7, { b: 8 }, [9, 10]);
+
+    const actual = rootLogger.getMessages(level);
+
+    const expected = [
+      `${level} message 1 2 { a: 3 } [ 4, 5 ]`,
+      `${level} message 6 7 { b: 8 } [ 9, 10 ]`
+    ];
+
+    t.deepEquals(actual, expected, `all ${level} messages should have been returned`);
+
+  });
+
+  t.end();
+
+});
+
+test('0-parameter logging event calls should log empty strings', t => {
+  const rootLogger = require('../index')();
+  const logger = rootLogger.get('layer value');
+
+  rootLogger.getLevels().forEach(level => {
+    // log nothing
+    logger[level]();
+
+    const actual = rootLogger.getMessages(level);
+
+    t.deepEquals(actual, [''], 'empty string should have been logged');
+
+  });
+
+  t.end();
+
+});
+
 // TESTS FOR GET
 test('getMessages should return all messages logged at the specified level', (t) => {
   const rootLogger = require('../index')();
