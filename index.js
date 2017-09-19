@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const util = require('util');
 
 module.exports = () => {
   // initialize arrays for all levels
@@ -11,7 +12,16 @@ module.exports = () => {
     get: (layer) => {
       // add error(msg), info(msg), etc to getLayer() to form logger functionality
       return Object.keys(levels).reduce((acc, level) => {
-        return _.set(acc, level, msg => levels[level].push(msg));
+        return _.set(acc, level, function() {
+          // add a function to $level that 'apply's to util.format
+          levels[level].push(
+            util.format.apply(
+              null,
+              // convert arguments to an array
+              Array.prototype.slice.call(arguments)
+            )
+          );
+        });
       }, { getLayer: () => layer } );
     },
     // return the supported logging levels
