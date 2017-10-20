@@ -1,19 +1,48 @@
 {
   "name": "pelias-mock-logger",
-  "version": "1.0.0",
+  "version": "0.0.0-semantic-release",
+  "author": "mapzen",
   "description": "Mock logger for testing logging behavior in Pelias projects",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "lint": "jshint .",
-    "test": "node test/index | tap-dot"
+    "test": "node test/index | tap-dot",
+    "travis": "npm run check-dependencies && npm test",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "validate": "npm ls",
+    "check-dependencies": "node_modules/.bin/npm-check --production"
   },
-  "author": "mapzen",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pelias/mock-logger.git"
+  },
+  "keywords": [
+    "pelias",
+    "logging"
+  ],
+  "bugs": {
+    "url": "https://github.com/pelias/mock-logger/issues"
+  },
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=1.4.3"
+  },
   "devDependencies": {
+    "jshint": "^2.9.5",
+    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
+    "precommit-hook": "^3.0.0",
     "tap-dot": "^1.0.5",
-    "tape": "^4.6.3"
+    "tape": "^4.8.0",
+    "semantic-release": "^8.0.3"
   },
   "dependencies": {
     "lodash": "^4.17.4"
-  }
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test",
+    "check-dependencies"
+  ]
 }
