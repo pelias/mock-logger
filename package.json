@@ -9,7 +9,6 @@
     "lint": "jshint .",
     "test": "node test/index | tap-dot",
     "travis": "npm test",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "validate": "npm ls"
   },
   "repository": {
@@ -41,5 +40,8 @@
     "lint",
     "validate",
     "test"
-  ]
+  ],
+  "release": {
+    "success": []
+  }
 }
