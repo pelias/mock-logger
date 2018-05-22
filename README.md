@@ -1,6 +1,6 @@
 # Pelias Mock Logger
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/mocklogger.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/mock-logger.svg)](https://greenkeeper.io/)
 
 ![Travis CI Status](https://travis-ci.org/pelias/mock-logger.svg)
 
