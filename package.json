@@ -8,10 +8,9 @@
   "scripts": {
     "lint": "jshint .",
     "test": "node test/index | tap-dot",
-    "travis": "npm run check-dependencies && npm test",
+    "travis": "npm test",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "validate": "npm ls",
-    "check-dependencies": "node_modules/.bin/npm-check --production"
+    "validate": "npm ls"
   },
   "repository": {
     "type": "git",
@@ -30,7 +29,6 @@
   },
   "devDependencies": {
     "jshint": "^2.9.5",
-    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
     "precommit-hook": "^3.0.0",
     "tap-dot": "^1.0.5",
     "tape": "^4.8.0",
@@ -42,7 +40,6 @@
   "pre-commit": [
     "lint",
     "validate",
-    "test",
-    "check-dependencies"
+    "test"
   ]
 }
