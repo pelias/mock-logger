@@ -1,7 +1,7 @@
 {
   "name": "pelias-mock-logger",
   "version": "0.0.0-semantic-release",
-  "author": "mapzen",
+  "author": "Pelias",
   "description": "Mock logger for testing logging behavior in Pelias projects",
   "main": "index.js",
   "license": "MIT",
