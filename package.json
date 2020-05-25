@@ -30,7 +30,7 @@
     "jshint": "^2.9.5",
     "precommit-hook": "^3.0.0",
     "tap-dot": "^2.0.0",
-    "tape": "^4.8.0"
+    "tape": "^5.0.1"
   },
   "dependencies": {
     "lodash": "^4.17.4"
