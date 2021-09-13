@@ -165,7 +165,7 @@ test('unknown level parameter to getMessages should throw error', (t) => {
 
   t.throws(
     rootLogger.getMessages.bind(null, 'unknown level'),
-    /^unsupported log level: unknown level$/
+    /^Error: unsupported log level: unknown level$/
   );
   t.end();
 
@@ -220,7 +220,7 @@ test('unknown level parameter to hasMessages should throw error', (t) => {
 
   t.throws(
     rootLogger.hasMessages.bind(null, 'unknown level'),
-    /^unsupported log level: unknown level$/
+    /^Error: unsupported log level: unknown level$/
   );
   t.end();
 
@@ -281,11 +281,11 @@ test('isMessage should throw an error if the supplied pattern is not a valid reg
   rootLogger.getLevels().forEach((level) => {
     t.throws(
       rootLogger.isMessage.bind(null, level, 17.3),
-      /^pattern must be a regexp or string$/
+      /^Error: pattern must be a regexp or string$/
     );
     t.throws(
       rootLogger[`is${_.capitalize(level)}Message`].bind(null, 17.3),
-      /^pattern must be a regexp or string$/
+      /^Error: pattern must be a regexp or string$/
     );
   });
 
@@ -298,7 +298,7 @@ test('unknown level parameter to isMessage should throw error', (t) => {
 
   t.throws(
     rootLogger.isMessage.bind(null, 'unknown level'),
-    /^unsupported log level: unknown level$/
+    /^Error: unsupported log level: unknown level$/
   );
   t.end();
 

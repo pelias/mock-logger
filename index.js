@@ -42,7 +42,7 @@ module.exports = () => {
         return _.cloneDeep(levels);
       }
 
-      throw `unsupported log level: ${level}`;
+      throw new Error(`unsupported log level: ${level}`);
     },
     isMessage: (level, pattern) => {
       if (levels.hasOwnProperty(level)) {
@@ -51,10 +51,10 @@ module.exports = () => {
             _.isRegExp(pattern) ? message.match(pattern) : message === pattern);
         }
 
-        throw 'pattern must be a regexp or string';
+        throw new Error('pattern must be a regexp or string');
       }
 
-      throw `unsupported log level: ${level}`;
+      throw new Error(`unsupported log level: ${level}`);
     }
   };
 
