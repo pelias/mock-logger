@@ -8,7 +8,7 @@
   "scripts": {
     "lint": "jshint .",
     "test": "node test/index | tap-dot",
-    "travis": "npm test",
+    "ci": "npm test",
     "validate": "npm ls"
   },
   "repository": {
