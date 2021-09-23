@@ -2,8 +2,6 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/pelias/mock-logger.svg)](https://greenkeeper.io/)
 
-![Travis CI Status](https://travis-ci.org/pelias/mock-logger.svg)
-
 This module is used for testing logging events in Pelias projects.  [proxyquire](https://www.npmjs.com/package/proxyquire)
 is the supported module for overriding dependencies in which this module is used.  
 
